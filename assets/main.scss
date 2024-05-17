@@ -1,0 +1,88 @@
+.pma-btn {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
+  width: 30px;
+  height: 30px;
+  border-top: 3px solid #e7f3f5;
+  border-left: 3px solid #e7f3f5;
+  background-color: #e7f3f5;
+  border-radius: 8px 0;
+  cursor: pointer;
+  transition: .3s;
+
+  & svg {
+    width: 15px;
+    height: 15px;
+
+    & path {
+      fill: #e7f3f5;
+      transition: .3s;
+    }
+  }
+
+  &:hover {
+    border-top: 3px solid #fff;
+    border-left: 3px solid #fff;
+
+    & svg {
+      & path {
+        fill: #fff;
+      }
+    }
+  }
+
+  &--head {
+    position: relative;
+    right: auto;
+    bottom: auto;
+    border: 3px solid #fff;
+    border-radius: 8px;
+    background-color: #fff;
+    margin-top: 3px;
+
+    & svg {
+      & path {
+        fill: #fff;
+      }
+    }
+
+    &:hover {
+      border: 3px solid #000;
+
+      & svg {
+        & path {
+          fill: #000;
+        }
+      }
+    }
+  }
+}
+
+.pma-def-btn-primary {
+  color: #fff;
+  background-color: #0f6cbf;
+  border-color: #0f6cbf;
+  transition: .3s;
+
+  &:hover {
+    color: #fff;
+    background-color: #0c589c;
+    border-color: #0b5190;
+  }
+}
+.pma-def-btn-secondary {
+  color: #1d2125;
+  background-color: #ced4da;
+  border-color: #ced4da;
+  transition: .3s;
+
+  &:hover {
+    color: #1d2125;
+    background-color: #b8c1ca;
+    border-color: #b1bbc4;
+  }
+}

@@ -1,0 +1,16 @@
+.MyButton {
+  font-size: 14px;
+  padding: 3px 10px;
+  border: 1px solid;
+  border-radius: 4px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #e0e0e0;
+  }
+  &:disabled {
+    opacity: .8;
+    pointer-events: none;
+    cursor: default;
+  }
+}

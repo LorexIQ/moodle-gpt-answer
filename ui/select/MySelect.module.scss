@@ -1,0 +1,62 @@
+.MySelect {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 5px;
+
+  &__title {
+    font-size: 14px;
+    width: 150px;
+  }
+  &__select {
+    position: relative;
+    width: 100%;
+
+    &__header {
+      font-size: 14px;
+      padding: 5px 10px;
+      border: 1px solid;
+      border-radius: 4px;
+      cursor: pointer;
+
+      &__placeholder {
+        & span {
+          opacity: .5;
+        }
+      }
+      &__opened {
+        border-radius: 4px 4px 0 0;
+      }
+    }
+    &__content {
+      position: absolute;
+      z-index: 1;
+      width: 100%;
+      max-height: 200px;
+      padding: 4px 0;
+      border: 1px solid;
+      border-top: 0;
+      border-radius: 0 0 4px 4px;
+      background-color: #fff;
+      overflow: auto;
+
+      &__el {
+        padding: 5px 10px;
+        cursor: pointer;
+
+        &:nth-child(even) {
+          background-color: #f8f8f8;
+        }
+        &:hover {
+          background-color: #d9d9d9;
+        }
+
+        &__active {
+          opacity: .5;
+          pointer-events: none;
+          cursor: default;
+        }
+      }
+    }
+  }
+}
