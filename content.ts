@@ -35,9 +35,10 @@ class QuestionCard {
     private answers: AnswerCard[] = [];
     private radioPromptPart = 'You can only write numbers. Answer with the serial number of the answer from 1 to number of answers';
     private checkboxPromptPart = 'You can only write numbers. Answer with serial numbers of answers from 1 to number of answers, separated by ";"';
-    private prompt = 'YOUR ROLE: YOU CAN\'T WRITE ANY SYMBOLS EXCEPT "1-9" and ";". Question: "{question}". Answers: ["{answers}"]. {promptPart}'
+    private prompt = 'YOUR ROLE: YOU CAN\'T WRITE ANY SYMBOLS EXCEPT "1-9" and ";". Theme course: {theme}. Question: "{question}". Answers: ["{answers}"]. {promptPart}'
 
     constructor(
+        private readonly theme: string,
         private readonly text: string,
         private readonly type: 'checkbox' | 'radio'
     ) {
@@ -55,6 +56,7 @@ class QuestionCard {
     getPreparedPrompt() {
         return this.prompt
             .replace('{promptPart}', this.type === 'checkbox' ? this.checkboxPromptPart : this.radioPromptPart)
+            .replace('{theme}', this.theme)
             .replace('{question}', this.text)
             .replace('{answers}', this.answers.map(a => a.getText()).join('", "'));
     }
@@ -65,9 +67,12 @@ class QuestionCard {
 
         withLock && this.startLoad();
         try {
-            response = await this.sendAIContent(this.getPreparedPrompt());
             console.log(this.getPreparedPrompt())
-        } catch (_) {}
+            response = await this.sendAIContent(this.getPreparedPrompt());
+            console.log(response)
+        } catch (e) {
+            console.error(e);
+        }
         withLock && this.endLoad();
 
         return response.content
@@ -109,7 +114,7 @@ class QuestionCard {
 
 class App {
     private askIcon: string = '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="currentColor" d="M5.486 0c-1.92 0-2.881 0-3.615.373A3.43 3.43 0 0 0 .373 1.871C-.001 2.605 0 3.566 0 5.486v9.6c0 1.92 0 2.88.373 3.613c.329.645.853 1.17 1.498 1.498c.734.374 1.695.375 3.615.375h11.657V24l.793-.396c2.201-1.101 3.3-1.652 4.105-2.473a6.85 6.85 0 0 0 1.584-2.56C24 17.483 24 16.251 24 13.79V5.486c0-1.92 0-2.881-.373-3.615A3.43 3.43 0 0 0 22.129.373C21.395-.001 20.434 0 18.514 0zm1.371 10.285h10.286a5.142 5.142 0 0 1-10.286.024z"/></svg>';
-    private match: RegExp = new RegExp('https?:\/\/moodle.*');
+    private match: RegExp = new RegExp('https?:\/\/(moodle.*)|(localhost.*)');
     private isOnline = this.match.test(origin);
     private questions: QuestionCard[] = [];
 
@@ -133,7 +138,7 @@ class App {
         questions.length && this.createAnswerAllButton(header);
         questions.forEach(element => {
             element.style.position = 'relative';
-            element.appendChild(this.createAnswerButton(element));
+            element.appendChild(this.createAnswerButton(header.textContent.trim(), element));
         });
     }
     private findDOMElement<T extends HTMLElement>(selector: string, text?: string) {
@@ -145,14 +150,14 @@ class App {
         }
         return results;
     }
-    private createAnswerButton(content: HTMLElement) {
+    private createAnswerButton(theme: string, content: HTMLElement) {
         const button = document.createElement('div');
         button.classList.add('pma-btn');
         button.style.display = 'none';
         button.innerHTML = this.askIcon;
 
         const isMoreAnswers = !!content.querySelector('input[type="checkbox"]');
-        const questionCard = new QuestionCard([...content.querySelectorAll('.qtext > p')].map(c => c.textContent.trim()).join(' '), isMoreAnswers ? 'checkbox' : 'radio');
+        const questionCard = new QuestionCard(theme, [...content.querySelectorAll('.qtext > p')].map(c => c.textContent.trim()).join(' '), isMoreAnswers ? 'checkbox' : 'radio');
         const answers = [...content.querySelectorAll('.answer > div')];
 
         answers.forEach(answer => questionCard.addAnswer(
@@ -190,6 +195,7 @@ class App {
         });
 
         content.style.gap = '10px'
+        console.log(content, button)
         content.appendChild(button);
     }
     private fixButton(text: string, btnClass: string) {

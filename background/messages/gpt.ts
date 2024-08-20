@@ -13,7 +13,7 @@ function sendChatContent(settings: SettingsType, content: string) {
     return openai.chat.completions.create({
         temperature: 0,
         messages: [{ role: 'user', content }],
-        model: 'gpt-4-1106-preview'
+        model: settings.model.name
     })
 }
 
